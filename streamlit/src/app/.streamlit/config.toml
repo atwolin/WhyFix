@@ -1,0 +1,6 @@
+[server]
+port = 1126
+fileWatcherType = "none"
+
+[theme]
+baseRadius = "small"

@@ -1,0 +1,129 @@
+model:
+  reasoning:
+    settings:
+      model_kwargs:
+        reasoning:
+          effort: medium
+      model_name: o4-mini
+      use_responses_api: true
+  gpt:
+    settings:
+      model_name: gpt-4.1-nano
+      temperature: 0.7
+      max_tokens: 32000
+      use_responses_api: true
+
+chunking:
+  "500":
+    chunk_size: 500
+    chunk_overlap: 20
+  "1000":
+    chunk_size: 1000
+    chunk_overlap: 50
+
+embedding_model:
+  small:
+    model: "text-embedding-3-small"
+  large:
+    model: "text-embedding-3-large"
+
+query_retrieval:
+  origin:
+    causes: >
+      Please extract as much information as possible related to the causes of word choice errors, semantic lexical errors, and miscollocations among English as a Foreign Language (EFL) learners.
+
+    academic_writing: >
+      Please extract as much information as possible related to the features of academic writing.
+
+  rewrite:
+    causes:
+      fourOneNano: >
+        Please provide a comprehensive overview of the causes and underlying factors contributing to word choice errors, semantic lexical errors, and miscollocations
+        in language production, including linguistic, cognitive, and contextual influences.
+
+      oFourMini: >
+        Provide an in-depth analysis of the underlying causes of word choice errors, semantic-lexical errors, and miscollocations in second-language learners.
+        In your answer, draw on applied linguistics and SLA research to explain how cognitive factors (e.g., interlingual transfer,
+        limited semantic representations), linguistic factors (e.g., polysemy, semantic prosody, collocational constraints),
+        pedagogical factors (e.g., dictionary misuse, insufficient collocation instruction), and contextual factors (e.g.,
+        register demands, input frequency) each contribute to these error types.
+
+    academic_writing:
+      fourOneNano: >
+        Please provide a comprehensive overview of the key features and characteristics of academic writing,
+        including its structure, tone, style, conventions, and common elements used to ensure clarity, formality, and credibility in scholarly communication.
+
+      oFourMini: >
+        Please provide a comprehensive, detailed overview of the key features of academic writing, including but not limited to:
+          • Formal tone and objective stance
+          • Clear, logical structure (e.g. introduction, literature review, methodology, results, discussion, conclusion)
+          • Precision and clarity in language, including discipline-specific terminology
+          • Best practices and common pitfalls, with concrete examples where possible
+
+  step_back:
+    causes:
+      fourOneNano: >
+        What are the common factors and underlying causes that lead to
+        errors in word choice, semantic lexical usage, and collocation mistakes?
+
+      oFourMini: >
+        Step-back query: What are the common types and underlying causes
+        of vocabulary-related errors—including word choice, semantic misunderstandings,
+        and collocation mistakes—in language learning and use?
+
+    academic_writing:
+      oFourMini: >
+        What are the defining characteristics, conventions, purposes and typical structures of academic writing?
+
+      fourOneNano: >
+        What are the key characteristics and components of effective academic writing?
+
+  decomposition:
+    causes:
+      fourOneNano:
+      - What are the common causes of word choice errors in language use?
+      - What are semantic lexical errors, and what typically causes them?
+      - How do miscollocations occur, and what linguistic factors contribute to them?
+      - What cognitive or linguistic processes lead to errors in word selection and
+        collocation?
+      - Are there specific language learning or processing factors that increase the
+        likelihood of these types of errors?
+
+      oFourMini:
+      - What cognitive and psycholinguistic factors (e.g. memory retrieval limits,
+        processing constraints) lead to word-choice errors?
+      - How does first‐language interference contribute to semantic-lexical errors
+        in second-language production?
+      - In what ways do limited vocabulary size and weak collocational knowledge cause
+        miscollocations?
+      - How do pragmatic, contextual, and cultural misunderstandings trigger semantic-lexical
+        errors?
+      - What role do instructional methods, feedback practices, and learning materials
+        play in preventing or exacerbating word-choice errors and miscollocations?
+
+    academic_writing:
+      oFourMini:
+        - What is the primary purpose of academic writing, and who is its intended audience?
+        - What structural and organizational conventions (e.g., sections, headings, logical flow) define academic writing?
+        - Which language and style features (e.g., formality, objectivity, precision, use of technical vocabulary, hedging) are typical in academic writing?
+        - How are sources integrated, cited, and referenced in academic writing to support claims and maintain academic integrity?
+        - What role do argumentation, evidence presentation, and critical analysis play in shaping the content and rigor of academic writing?
+
+      fourOneNano:
+        - What are the key characteristics and conventions of academic writing?
+        - What are the common features of language, tone, and style used in academic writing?
+        - How is the structure of academic writing typically organized (e.g., introduction, body, conclusion)?
+        - What types of evidence and referencing methods are commonly employed in academic writing?
+        - How does academic writing differ across various disciplines or fields of study?
+
+
+query_summary:
+  v1: >
+    You are an expert AI assistant whose sole task is to convert chunks of text into clear, hierarchical bullet-point summaries. Preserve all key concepts and terminology from the source, use parallel phrasing, and do not add new information.
+
+    Here are the retrieved documents:
+
+    {retrieved_documents}
+
+    Please transform the above content into a concise bullet-point list, grouping related points under sub-bullets where appropriate.
+

@@ -1,0 +1,26 @@
+beautifulsoup4==4.13.4
+bert_score==0.3.13
+elasticsearch==9.0.1
+errant==3.0.0
+faiss-gpu==1.7.2
+langchain==0.3.25
+langchain_chroma==0.2.4
+langchain_community==0.3.24
+langchain_core==0.3.60
+langchain_openai==0.3.17
+nltk==3.9.1
+numpy==1.26.4
+openai==1.79.0
+pandas==2.2.3
+pydantic==2.11.4
+python-dotenv==1.1.0
+PyYAML==6.0.2
+rouge_score==0.1.2
+sentence_transformers==3.4.1
+spacy==3.8.4
+# en_core_web_sm==3.8.0
+https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl
+streamlit==1.44.1
+torch==2.6.0
+tqdm==4.67.1
+transformers==4.49.0

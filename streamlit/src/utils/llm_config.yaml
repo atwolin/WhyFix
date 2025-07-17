@@ -1,0 +1,1650 @@
+dataset:
+  fce: "CLC-FCE"
+  longman: "Longman Dictionary of Common Errors"
+
+input_sent:
+  t: "tartget sentence only"
+  pt: "preceding and target sentences"
+  tf: "target and following sentences"
+  ptf: "preceding, target, and following sentences"
+
+model_type:
+  gpt:
+    fourOneMini: "gpt-4.1-mini"
+    fourOneNano: "gpt-4.1-nano"
+    fourOMini: "gpt-4o-mini"
+    # fourO_mini_search: "gpt-4o-mini-search-preview"
+  reasoning:
+    model:
+      oFourMini: "o4-mini"
+      oThreeMini: "o3-mini"
+      # oOne_mini: "o1-mini"
+    effort:
+      h: "high"
+      m: "medium"
+
+role:
+  teacher: "You are an experienced high school English teacher with over 20 years of expertise in teaching academic writing to English as a Foreign Language (EFL) students. "
+  linguist: "You are a research linguist with expertise in English as a Foreign Language (EFL) studies. "
+  none: ""
+
+temp:
+  zero: 0.0
+  seven: 0.7
+
+output_len:
+  thirty: " in 30 words or less"
+  fifty: " in 50 words or less"
+  eighty: " in 80 words or less"
+  unlimit: ""
+
+methods:
+  BL: "Baseline"
+  Dict: "RAG from Dictionary"
+  L2: "RAG from Linguistic Research"
+  Collo: "RAG from Collocation"
+  Collo2: "RAG from Collocation with Collocation Examples"
+  Mix: "Combine RAG from Dictionary, Linguistic Research, and Collocation"
+  Mix2: "Combine RAG from Dictionary, Linguistic Research, and Collocation with Collocation Examples"
+
+
+model_names:
+  fON: "gpt-4.1-nano"
+
+role_names:
+  l: "Linguist"
+
+prompt:
+  baseline: >
+    {role}I submitted this sentence, '{sentence}' to a grammar checker, and received a recommendation to replace '{learnerWord}' with '{editorWord}'.
+
+    Please explain the reason why{output_len}. Then do it again in zh-tw. Additionally, generate two bilingual examples for each word.
+
+  ragDictionary: >
+    {role}Your task is to generate context-sensitive and reasonable explanations for lexical errors in input sentences written by English as a Foreign Language (EFL) learners using supporting materials from dictionary entries,
+    and the Academic Keyword List (AKL). Also rely on your own knowledge of probable reasons why EFL learners make such lexical errors.
+    Compare the erroneous collocations with their corrected forms provided by a grammar checker.
+    Next, repeat the explanation in zh-tw and additionally generate two bilingual sentences for each lexical errors and its corrected form.
+
+
+    Each explanation must include a clear description of the error and meet the following requirements:
+
+    - Context-Sensitive: The explanation should consider the sentence context.
+
+    - Reasonableness: When explaining the correction, ensure that you address the following relevant aspects, as applicable:
+        Definitions and example sentences
+        Appropriate usage contexts
+        Collocations or common usage patterns
+        Differences between British and American English
+        Differences between spoken and written English
+        Formality level
+        Figurative vs. literal usage
+
+
+    Include the following dictionary information:
+
+    For the lexical errors, {learnerWord}:
+
+    - PoS: {learnerWord_pos}
+
+    - CEFR level: {learnerWord_level}
+
+    - Definition: {learnerWord_definition}
+
+    - Example sentences: {learnerWord_examples}
+
+    - AKL: {learnerWord_in_akl}
+
+    For the correct collocation, {editorWord}:
+
+    - PoS: {editorWord_pos}
+
+    - CEFR level: {editorWord_level}
+
+    - Definition: {editorWord_definition}
+
+    - Example sentences: {editorWord_examples}
+
+    - AKL: {editorWord_in_akl}
+
+
+    Guidelines for Markers:
+
+    - Each lexical errors is enclosed between "[-" and "-]".
+
+    - Each correct collocation is enclosed between "{{+" and "+}}".
+
+    - Do not alter the content within the lexical errors markers "[--]" or the correct collocation markers "{{++}}".
+
+
+    Explanation Structure:
+
+    The error description must be organized using a deductive reasoning structure:
+
+    - Major premise: State the semantic rules for both lexical errors and correct collocation. If any collocation (lexical errors and correct collocation) appears in the AKL, note that it is better due to higher usage frequency in the academic writing.
+
+    - Minor premise: The reason for the lexical errors and correct collocation.
+
+    Now, explain the sentences: {sentence}
+
+  ragDictionary_v2: >
+    {role}I submitted this sentence, '{sentence}' to a grammar checker, and received a recommendation to replace '{learnerWord}' with '{editorWord}'.
+
+    Please explain the reason why{output_len}.
+
+
+    In your explanation, ensure that you address the following relevant aspects, as applicable:
+
+    <usage>
+
+    Definitions and example sentences
+
+    Appropriate usage contexts
+
+    Collocations (include free combinations, restricted collocations, figurative idioms, and pure idioms.)
+
+    Co-occurrence (the phenomenon in language where words frequently appear together, often in close proximity to a central word (a "NODE" word) and shown through corpus analysis measuring their co-occurrence patterns.)
+
+    Differences between British and American English
+
+    Differences between spoken and written English
+
+    Formality level
+
+    Figurative vs. literal usage
+
+    </usage>
+
+
+    <Dictionary and Academic Keyword List (AKL) information for both words format>
+
+    1. Dictionary definition
+
+    2. Part of speech
+
+    3. CEFR level
+
+    4. Dictionary example sentence
+
+    5. Whether the word is in the AKL
+
+    </Dictionary and Academic Keyword List (AKL) information for both words format>
+
+
+    <information_learner>
+
+    {learnerWord}:
+
+    1. {learnerWord_pos}
+
+    2. {learnerWord_level}
+
+    3. {learnerWord_definition}
+
+    4. {learnerWord_examples}
+
+    5. {learnerWord_in_akl}
+
+    </information_learner>
+
+
+    <information_recommendation>
+
+    {editorWord}
+
+    1. {editorWord_pos}
+
+    2. {editorWord_level}
+
+    3. {editorWord_definition}
+
+    4. {editorWord_examples}
+
+    5. {editorWord_in_akl}
+
+    </information_recommendation>
+
+
+    Then do it again in zh-tw. Additionally, generate two bilingual examples for each word.
+
+  causes: >
+    {role}Your task is to check if the provided sentences match any of the following reasons for lexical errors.
+    These sentences—created by English as a Foreign Language (EFL) learners—contain lexical errors marked with “[--]” and correct words marked with “{{++}}”.
+    Each numbered reason describes a possible cause of the learners’ vocabulary mistakes.
+
+    Only return the matched items, no need to explain or provide additional information.
+    When you cite any item from <Reasons for Lexical Errors>, reproduce that item verbatim—word-for-word,
+    with identical spelling, capitalization, punctuation, line breaks, and bullet symbols. Do NOT paraphrase, shorten, expand, or otherwise alter the original wording.
+
+
+    <sentences>
+
+    {sentences}
+
+    </sentences>
+
+
+    <Reasons for Lexical Errors>
+
+    {causes}
+
+    </Reasons for Lexical Errors>
+
+  academic_writing: >
+    {role}Your task is to determine if the given sentences, written by EFL learners for academic purposes,
+    match any of the following academic writing features for the purpose of revising the lexical errors. These sentences include lexical errors marked with “[--]” and correct words marked with “{{++}}”.
+    Each numbered item describes a feature of academic writing.
+
+    Only return the matched items, no need to explain or provide additional information.
+    When you cite any item from <Academic Writing Features>, reproduce that item verbatim—word-for-word,
+    with identical spelling, capitalization, punctuation, line breaks, and bullet symbols. Do NOT paraphrase, shorten, expand, or otherwise alter the original wording.
+
+
+    <sentences>
+
+    {sentences}
+
+    </sentences>
+
+
+    <Academic Writing Features>
+
+    {academic_writing}
+
+    </Academic Writing Features>
+
+  ragL2: >
+    {role}I submitted this sentence, '{sentence}' to a grammar checker, and received a recommendation to replace '{learnerWord}' with '{editorWord}'.
+
+    Please explain the reason why{output_len}.
+
+
+    In your explanation, ensure that you address the following relevant aspects, as applicable:
+
+    <usage>
+
+    Definitions and example sentences
+
+    Appropriate usage contexts
+
+    Collocations (include free combinations, restricted collocations, figurative idioms, and pure idioms.)
+
+    Co-occurrence (the phenomenon in language where words frequently appear together, often in close proximity to a central word (a "NODE" word) and shown through corpus analysis measuring their co-occurrence patterns.)
+
+    Differences between British and American English
+
+    Differences between spoken and written English
+
+    Formality level
+
+    Figurative vs. literal usage
+
+    </usage>
+
+
+    <causes of lexical errors in EFL learners' writing>
+
+    {causes_of_lexical_errors}
+
+    </causes of lexical errors in EFL learners' writing>
+
+
+    <features of academic writing>
+
+    {features_of_academic_writing}
+
+    </features of academic writing>
+
+
+    Then do it again in zh-tw. Additionally, generate two bilingual examples for each word.
+
+  ragCollocation: >
+    {role}I submitted this sentence, '{sentence}' to a grammar checker, and received a recommendation to replace '{learnerWord}' with '{editorWord}'.
+
+    Please explain the reason why based on collocated words{output_len}.
+
+
+    In your explanation, ensure that you address the following relevant aspects, as applicable:
+
+
+    <usage>
+
+    Definitions and example sentences
+
+    Appropriate usage contexts
+
+    Collocations (include free combinations, restricted collocations, figurative idioms, and pure idioms.)
+
+    Co-occurrence (the phenomenon in language where words frequently appear together, often in close proximity to a central word (a "NODE" word) and shown through corpus analysis measuring their co-occurrence patterns.)
+
+    Differences between British and American English
+
+    Differences between spoken and written English
+
+    Formality level
+
+    Figurative vs. literal usage
+
+    </usage>
+
+
+    <Related Collocations Filed Names>
+
+    error_component|error_component_pos|error_collocation|correct_collocation|collocation_correction_freq|component_change_freq_details|collocation_pivot_and_category_details|component_change_pivot_category_accum_freq_details|component_change_pivot_category_uniq_freq_details|error_component_total_freq_details|error_component_total_freq_in_pivot_category_details
+
+    </Related Collocations Filed Names>
+
+
+    <related_collocation>
+
+    {related_collocations}
+
+    </related_collocation>
+
+
+    Then do it again in zh-tw. Additionally, generate two bilingual examples for each word.
+
+  ragCollocation_v2: >
+    {role}I submitted this sentence, '{sentence}' to a grammar checker, and received a recommendation to replace it with '{edited_sentence}'.
+
+    Your task is to explain the reason for this correction, focusing primarily on collocations and the co-occurrence of words{output_len}.
+
+      The original sentence is: '{sentence}'
+      The edited sentence is: '{edited_sentence}'
+      The formatted sentence showing the change is: {formatted_sentences}
+          (Guidelines for Markers: Each original word is enclosed between "[-" and "-]". Each recommended word is enclosed between "{{+" and "+}}".)
+
+    First, provide a comprehensive explanation for the correction. In your explanation, ensure that you address the following relevant aspects, as applicable:
+
+
+    <usage>
+
+    Definitions and example sentences
+
+    Appropriate usage contexts
+
+    Collocations (include free combinations, restricted collocations, figurative idioms, and pure idioms.)
+
+    Co-occurrence (the phenomenon in language where words frequently appear together, often in close proximity to a central word (a "NODE" word) and shown through corpus analysis measuring their co-occurrence patterns.)
+
+    Differences between British and American English
+
+    Differences between spoken and written English
+
+    Formality level
+
+    Figurative vs. literal usage
+
+    </usage>
+
+
+    <Related Collocations Field Names>
+
+    error_component|error_component_pos|error_collocation|correct_collocation|collocation_correction_freq|component_change_freq_details|collocation_pivot_and_category_details|component_change_pivot_category_accum_freq_details|component_change_pivot_category_uniq_freq_details|error_component_total_freq_details|error_component_total_freq_in_pivot_category_details
+
+    </Related Collocations Field Names>
+
+
+    <related_collocation>
+
+    {related_collocations}
+
+    </related_collocation>
+
+
+    <other_category_collocations>
+
+    {other_category_collocations}
+
+    </other_category_collocations>
+
+
+    Next, provide one illustrative example sentence for the specific word or phrase found within "[-" and "-]" (from the original sentence) and one for the word or phrase within "{{+" and "+}}" (from the alternative sentence). These examples should showcase general usage of these individual words or phrases.
+
+
+    After the explanations and examples, please present the following collocation information:
+
+    1.  **Most Relevant Related Collocation:**
+        From the <related_collocations> data provided above, identify the single entry that is most directly relevant to the recommendation.
+        Present this most relevant collocation formatted as follows:
+        * `component_change_category`: "[error_component] -> [correct_component] (POS) + [category]", where category can be found in "collocation_pivot_and_category_details" (pivot_word < category_name) and POS can be found in "error_component_pos".
+        * `example_collocation`: "[error_component] -> [correct_component] [pivot_word]"
+        * `example_collocation_2`: From the <related_collocations> data, if available, find another distinct collocation where the `error_component` is the same as in the primary correction, but the `pivot_word` is different. Format it as "[error_component] -> [correct_component_for_that_pivot] + [different_pivot_word]". If no such distinct alternative pivot is found for this specific error component in the provided related collocations, create one example on your own.
+        If the <related_collocations> data is empty, return none.
+
+    2.  **Other Category Collocations:**
+        From the <other_category_collocations> data provided above (which represents corrections where the `error_component` is the same but the `pivot_word` and `correct_component` might be different and belong to other semantic categories), select three entries and add another example collocation named `example_collocation_2`.
+        Then return the three entries with `component_change_category`, `example_collocation`, and `example_collocation_2`.
+        If the <other_category_collocations> data is empty, return none.
+
+    Finally, repeat the entire response (the comprehensive explanation, the illustrative word/phrase examples, and the structured collocation information) in zh-tw (Traditional Chinese - Taiwan).
+
+
+
+prompt_v2:
+  baseline: >
+    {role}I submitted this sentence, '{sentence}' to a grammar checker, and received a recommendation to replace it with '{edited_sentence}'.
+
+    Your task is to explain the reason for this correction, focusing primarily on collocations and the co-occurrence of words{output_len}.
+
+      The original sentence is: '{sentence}'
+      The edited sentence is: '{edited_sentence}'
+      The formatted sentence showing the change is: {formatted_sentences}
+          (Guidelines for Markers: Each original word is enclosed between "[-" and "-]". Each recommended word is enclosed between "{{+" and "+}}".)
+
+    First, provide a comprehensive explanation for the correction.
+
+    Next, provide one illustrative example sentence for the specific word or phrase found within "[-" and "-]" (from the original sentence) and one for the word or phrase within "{{+" and "+}}" (from the alternative sentence). These examples should showcase general usage of these individual words or phrases.
+
+    Finally, repeat the entire response (the comprehensive explanation and the illustrative word/phrase examples) in zh-tw (Traditional Chinese - Taiwan).
+
+  ragDictionary: >
+    {role}I submitted this sentence, '{sentence}' to a grammar checker, and received a recommendation to replace it with '{edited_sentence}'.
+
+    Your task is to explain the reason for this correction, focusing primarily on collocations and the co-occurrence of words{output_len}.
+
+      The original sentence is: '{sentence}'
+      The edited sentence is: '{edited_sentence}'
+      The formatted sentence showing the change is: {formatted_sentences}
+          (Guidelines for Markers: Each original word is enclosed between "[-" and "-]". Each recommended word is enclosed between "{{+" and "+}}".)
+
+    First, provide a comprehensive explanation for the correction. In your explanation, ensure that you address the following relevant aspects, as applicable:
+
+
+    <usage>
+
+    Definitions and example sentences
+
+    Appropriate usage contexts
+
+    Collocations (include free combinations, restricted collocations, figurative idioms, and pure idioms.)
+
+    Co-occurrence (the phenomenon in language where words frequently appear together, often in close proximity to a central word (a "NODE" word) and shown through corpus analysis measuring their co-occurrence patterns.)
+
+    Differences between British and American English
+
+    Differences between spoken and written English
+
+    Formality level
+
+    Figurative vs. literal usage
+
+    </usage>
+
+
+    <Dictionary and Academic Keyword List (AKL) information for both words format>
+
+    1. Dictionary definition
+
+    2. Part of speech
+
+    3. CEFR level
+
+    4. Dictionary example sentence
+
+    5. Whether the word is in the AKL
+
+    </Dictionary and Academic Keyword List (AKL) information for both words format>
+
+
+    <information_learner>
+
+    {lemmaWord_learner}:
+
+    1. {learnerWord_pos}
+
+    2. {learnerWord_level}
+
+    3. {learnerWord_definition}
+
+    4. {learnerWord_examples}
+
+    5. {learnerWord_in_akl}
+
+    </information_learner>
+
+
+    <information_recommendation>
+
+    {lemmaWord_editor}:
+
+    1. {editorWord_pos}
+
+    2. {editorWord_level}
+
+    3. {editorWord_definition}
+
+    4. {editorWord_examples}
+
+    5. {editorWord_in_akl}
+
+    </information_recommendation>
+
+
+    Next, provide one illustrative example sentence for the specific word or phrase found within "[-" and "-]" (from the original sentence) and one for the word or phrase within "{{+" and "+}}" (from the alternative sentence). These examples should showcase general usage of these individual words or phrases.
+
+    Finally, repeat the entire response (the comprehensive explanation and the illustrative word/phrase examples) in zh-tw (Traditional Chinese - Taiwan).
+
+  ragL2: >
+    {role}I submitted this sentence, '{sentence}' to a grammar checker, and received a recommendation to replace it with '{edited_sentence}'.
+
+    Your task is to explain the reason for this correction, focusing primarily on collocations and the co-occurrence of words{output_len}.
+
+      The original sentence is: '{sentence}'
+      The edited sentence is: '{edited_sentence}'
+      The formatted sentence showing the change is: {formatted_sentences}
+          (Guidelines for Markers: Each original word is enclosed between "[-" and "-]". Each recommended word is enclosed between "{{+" and "+}}".)
+
+    First, provide a comprehensive explanation for the correction. In your explanation, ensure that you address the following relevant aspects, as applicable:
+
+
+    <usage>
+
+    Definitions and example sentences
+
+    Appropriate usage contexts
+
+    Collocations (include free combinations, restricted collocations, figurative idioms, and pure idioms.)
+
+    Co-occurrence (the phenomenon in language where words frequently appear together, often in close proximity to a central word (a "NODE" word) and shown through corpus analysis measuring their co-occurrence patterns.)
+
+    Differences between British and American English
+
+    Differences between spoken and written English
+
+    Formality level
+
+    Figurative vs. literal usage
+
+    </usage>
+
+
+    <causes of lexical errors in EFL learners' writing>
+
+    {causes_of_lexical_errors}
+
+    </causes of lexical errors in EFL learners' writing>
+
+
+    <features of academic writing>
+
+    {features_of_academic_writing}
+
+    </features of academic writing>
+
+
+    Next, provide one illustrative example sentence for the specific word or phrase found within "[-" and "-]" (from the original sentence) and one for the word or phrase within "{{+" and "+}}" (from the alternative sentence). These examples should showcase general usage of these individual words or phrases.
+
+    Finally, repeat the entire response (the comprehensive explanation and the illustrative word/phrase examples) in zh-tw (Traditional Chinese - Taiwan).
+
+  ragCollocation: >
+    {role}I submitted this sentence, '{sentence}' to a grammar checker, and received a recommendation to replace it with '{edited_sentence}'.
+
+    Your task is to explain the reason for this correction, focusing primarily on collocations and the co-occurrence of words{output_len}.
+
+      The original sentence is: '{sentence}'
+      The edited sentence is: '{edited_sentence}'
+      The formatted sentence showing the change is: {formatted_sentences}
+          (Guidelines for Markers: Each original word is enclosed between "[-" and "-]". Each recommended word is enclosed between "{{+" and "+}}".)
+
+    First, provide a comprehensive explanation for the correction. In your explanation, ensure that you address the following relevant aspects, as applicable:
+
+
+    <usage>
+
+    Definitions and example sentences
+
+    Appropriate usage contexts
+
+    Collocations (include free combinations, restricted collocations, figurative idioms, and pure idioms.)
+
+    Co-occurrence (the phenomenon in language where words frequently appear together, often in close proximity to a central word (a "NODE" word) and shown through corpus analysis measuring their co-occurrence patterns.)
+
+    Differences between British and American English
+
+    Differences between spoken and written English
+
+    Formality level
+
+    Figurative vs. literal usage
+
+    </usage>
+
+
+    <Related Collocations Filed Names>
+
+    error_component|error_component_pos|error_collocation|correct_collocation|collocation_correction_freq|component_change_freq_details|collocation_pivot_and_category_details|component_change_pivot_category_accum_freq_details|component_change_pivot_category_uniq_freq_details|error_component_total_freq_details|error_component_total_freq_in_pivot_category_details
+
+    </Related Collocations Filed Names>
+
+
+    <related_collocation>
+
+    {related_collocations}
+
+    </related_collocation>
+
+
+    Next, provide one illustrative example sentence for the specific word or phrase found within "[-" and "-]" (from the original sentence) and one for the word or phrase within "{{+" and "+}}" (from the alternative sentence). These examples should showcase general usage of these individual words or phrases.
+
+    Finally, repeat the entire response (the comprehensive explanation and the illustrative word/phrase examples) in zh-tw (Traditional Chinese - Taiwan).
+
+  ragCollocation_v2: >
+    {role}I submitted this sentence, '{sentence}' to a grammar checker, and received a recommendation to replace it with '{edited_sentence}'.
+
+    Your task is to explain the reason for this correction, focusing primarily on collocations and the co-occurrence of words{output_len}.
+
+      The original sentence is: '{sentence}'
+      The edited sentence is: '{edited_sentence}'
+      The formatted sentence showing the change is: {formatted_sentences}
+          (Guidelines for Markers: Each original word is enclosed between "[-" and "-]". Each recommended word is enclosed between "{{+" and "+}}".)
+
+    First, provide a comprehensive explanation for the correction. In your explanation, ensure that you address the following relevant aspects, as applicable:
+
+
+    <usage>
+
+    Definitions and example sentences
+
+    Appropriate usage contexts
+
+    Collocations (include free combinations, restricted collocations, figurative idioms, and pure idioms.)
+
+    Co-occurrence (the phenomenon in language where words frequently appear together, often in close proximity to a central word (a "NODE" word) and shown through corpus analysis measuring their co-occurrence patterns.)
+
+    Differences between British and American English
+
+    Differences between spoken and written English
+
+    Formality level
+
+    Figurative vs. literal usage
+
+    </usage>
+
+
+    <Related Collocations Field Names>
+
+    error_component|error_component_pos|error_collocation|correct_collocation|collocation_correction_freq|component_change_freq_details|collocation_pivot_and_category_details|component_change_pivot_category_accum_freq_details|component_change_pivot_category_uniq_freq_details|error_component_total_freq_details|error_component_total_freq_in_pivot_category_details
+
+    </Related Collocations Field Names>
+
+
+    <related_collocation>
+
+    {related_collocations}
+
+    </related_collocation>
+
+
+    <other_category_collocations>
+
+    {other_category_collocations}
+
+    </other_category_collocations>
+
+
+    Next, provide one illustrative example sentence for the specific word or phrase found within "[-" and "-]" (from the original sentence) and one for the word or phrase within "{{+" and "+}}" (from the alternative sentence). These examples should showcase general usage of these individual words or phrases.
+
+    Then repeat the entire response (the comprehensive explanation and the illustrative word/phrase examples) in zh-tw (Traditional Chinese - Taiwan).
+
+    After the explanations and examples, please present the following collocation information:
+
+    1.  **Most Relevant Related Collocation:**
+        From the <related_collocations> data provided above, identify the single entry that is most directly relevant to the recommendation.
+        Present this most relevant collocation formatted as follows:
+        * `component_change_category`: "[error_component] -> [correct_component] (POS) + [category]", where category can be found in "collocation_pivot_and_category_details" (pivot_word < category_name) and POS can be found in "error_component_pos".
+        * `example_collocation`: "[error_component] -> [correct_component] [pivot_word]"
+        * `example_collocation_2`: From the <related_collocations> data, if available, find another distinct collocation where the `error_component` is the same as in the primary correction, but the `pivot_word` is different. Format it as "[error_component] -> [correct_component_for_that_pivot] + [different_pivot_word]". If no such distinct alternative pivot is found for this specific error component in the provided related collocations, create one example on your own.
+        If the <related_collocations> data is empty, return none.
+
+    2.  **Other Category Collocations:**
+        From the <other_category_collocations> data provided above (which represents corrections where the `error_component` is the same but the `pivot_word` and `correct_component` might be different and belong to other semantic categories), select three entries and add another example collocation named `example_collocation_2`.
+        Then return the three entries with `component_change_category`, `example_collocation`, and `example_collocation_2`.
+        If the <other_category_collocations> data is empty, return none.
+
+
+  ragMix: >
+    {role}I submitted this sentence, '{sentence}' to a grammar checker, and received a recommendation to replace it with '{edited_sentence}'.
+
+    Your task is to explain the reason for this correction, focusing primarily on collocations and the co-occurrence of words{output_len}.
+
+      The original sentence is: '{sentence}'
+      The edited sentence is: '{edited_sentence}'
+      The formatted sentence showing the change is: {formatted_sentences}
+          (Guidelines for Markers: Each original word is enclosed between "[-" and "-]". Each recommended word is enclosed between "{{+" and "+}}".)
+
+    First, provide a comprehensive explanation for the correction. In your explanation, ensure that you address the following relevant aspects, as applicable:
+
+
+    <usage>
+
+    Definitions and example sentences
+
+    Appropriate usage contexts
+
+    Collocations (include free combinations, restricted collocations, figurative idioms, and pure idioms.)
+
+    Co-occurrence (the phenomenon in language where words frequently appear together, often in close proximity to a central word (a "NODE" word) and shown through corpus analysis measuring their co-occurrence patterns.)
+
+    Differences between British and American English
+
+    Differences between spoken and written English
+
+    Formality level
+
+    Figurative vs. literal usage
+
+    </usage>
+
+
+    <Dictionary and Academic Keyword List (AKL) information for both words format>
+
+    1. Dictionary definition
+
+    2. Part of speech
+
+    3. CEFR level
+
+    4. Dictionary example sentence
+
+    5. Whether the word is in the AKL
+
+    </Dictionary and Academic Keyword List (AKL) information for both words format>
+
+
+    <information_learner>
+
+    {lemmaWord_learner}:
+
+    1. {learnerWord_pos}
+
+    2. {learnerWord_level}
+
+    3. {learnerWord_definition}
+
+    4. {learnerWord_examples}
+
+    5. {learnerWord_in_akl}
+
+    </information_learner>
+
+
+    <information_recommendation>
+
+    {lemmaWord_editor}:
+
+    1. {editorWord_pos}
+
+    2. {editorWord_level}
+
+    3. {editorWord_definition}
+
+    4. {editorWord_examples}
+
+    5. {editorWord_in_akl}
+
+    </information_recommendation>
+
+
+    <causes of lexical errors in EFL learners' writing>
+
+    {causes_of_lexical_errors}
+
+    </causes of lexical errors in EFL learners' writing>
+
+
+    <features of academic writing>
+
+    {features_of_academic_writing}
+
+    </features of academic writing>
+
+
+    <Related Collocations Filed Names>
+
+    error_component|error_component_pos|error_collocation|correct_collocation|collocation_correction_freq|component_change_freq_details|collocation_pivot_and_category_details|component_change_pivot_category_accum_freq_details|component_change_pivot_category_uniq_freq_details|error_component_total_freq_details|error_component_total_freq_in_pivot_category_details
+
+    </Related Collocations Filed Names>
+
+
+    <related_collocation>
+
+    {related_collocations}
+
+    </related_collocation>
+
+
+    Next, provide one illustrative example sentence for the specific word or phrase found within "[-" and "-]" (from the original sentence) and one for the word or phrase within "{{+" and "+}}" (from the alternative sentence). These examples should showcase general usage of these individual words or phrases.
+
+    Finally, repeat the entire response (the comprehensive explanation and the illustrative word/phrase examples) in zh-tw (Traditional Chinese - Taiwan).
+
+  ragMix_v2: >
+    {role}I submitted this sentence, '{sentence}' to a grammar checker, and received a recommendation to replace it with '{edited_sentence}'.
+
+    Your task is to explain the reason for this correction, focusing primarily on collocations and the co-occurrence of words{output_len}.
+
+      The original sentence is: '{sentence}'
+      The edited sentence is: '{edited_sentence}'
+      The formatted sentence showing the change is: {formatted_sentences}
+          (Guidelines for Markers: Each original word is enclosed between "[-" and "-]". Each recommended word is enclosed between "{{+" and "+}}".)
+
+    First, provide a comprehensive explanation for the correction. In your explanation, ensure that you address the following relevant aspects, as applicable:
+
+
+    <usage>
+
+    Definitions and example sentences
+
+    Appropriate usage contexts
+
+    Collocations (include free combinations, restricted collocations, figurative idioms, and pure idioms.)
+
+    Co-occurrence (the phenomenon in language where words frequently appear together, often in close proximity to a central word (a "NODE" word) and shown through corpus analysis measuring their co-occurrence patterns.)
+
+    Differences between British and American English
+
+    Differences between spoken and written English
+
+    Formality level
+
+    Figurative vs. literal usage
+
+    </usage>
+
+
+    <Dictionary and Academic Keyword List (AKL) information for both words format>
+
+    1. Dictionary definition
+
+    2. Part of speech
+
+    3. CEFR level
+
+    4. Dictionary example sentence
+
+    5. Whether the word is in the AKL
+
+    </Dictionary and Academic Keyword List (AKL) information for both words format>
+
+
+    <information_learner>
+
+    {lemmaWord_learner}:
+
+    1. {learnerWord_pos}
+
+    2. {learnerWord_level}
+
+    3. {learnerWord_definition}
+
+    4. {learnerWord_examples}
+
+    5. {learnerWord_in_akl}
+
+    </information_learner>
+
+
+    <information_recommendation>
+
+    {lemmaWord_editor}:
+
+    1. {editorWord_pos}
+
+    2. {editorWord_level}
+
+    3. {editorWord_definition}
+
+    4. {editorWord_examples}
+
+    5. {editorWord_in_akl}
+
+    </information_recommendation>
+
+
+    <causes of lexical errors in EFL learners' writing>
+
+    {causes_of_lexical_errors}
+
+    </causes of lexical errors in EFL learners' writing>
+
+
+    <features of academic writing>
+
+    {features_of_academic_writing}
+
+    </features of academic writing>
+
+
+    <Related Collocations Filed Names>
+
+    error_component|error_component_pos|error_collocation|correct_collocation|collocation_correction_freq|component_change_freq_details|collocation_pivot_and_category_details|component_change_pivot_category_accum_freq_details|component_change_pivot_category_uniq_freq_details|error_component_total_freq_details|error_component_total_freq_in_pivot_category_details
+
+    </Related Collocations Filed Names>
+
+
+    <related_collocation>
+
+    {related_collocations}
+
+    </related_collocation>
+
+
+    Next, provide one illustrative example sentence for the specific word or phrase found within "[-" and "-]" (from the original sentence) and one for the word or phrase within "{{+" and "+}}" (from the alternative sentence). These examples should showcase general usage of these individual words or phrases.
+
+    Then repeat the entire response (the comprehensive explanation and the illustrative word/phrase examples) in zh-tw (Traditional Chinese - Taiwan).
+
+    After the explanations and examples, please present the following collocation information:
+
+    1.  **Most Relevant Related Collocation:**
+        From the <related_collocations> data provided above, identify the single entry that is most directly relevant to the recommendation.
+        Present this most relevant collocation formatted as follows:
+        * `component_change_category`: "[error_component] -> [correct_component] (POS) + [category]", where category can be found in "collocation_pivot_and_category_details" (pivot_word < category_name) and POS can be found in "error_component_pos".
+        * `example_collocation`: "[error_component] -> [correct_component] [pivot_word]"
+        * `example_collocation_2`: From the <related_collocations> data, if available, find another distinct collocation where the `error_component` is the same as in the primary correction, but the `pivot_word` is different. Format it as "[error_component] -> [correct_component_for_that_pivot] + [different_pivot_word]". If no such distinct alternative pivot is found for this specific error component in the provided related collocations, create one example on your own.
+        If the <related_collocations> data is empty, return none.
+
+    2.  **Other Category Collocations:**
+        From the <other_category_collocations> data provided above (which represents corrections where the `error_component` is the same but the `pivot_word` and `correct_component` might be different and belong to other semantic categories), select three entries and add another example collocation named `example_collocation_2`.
+        Then return the three entries with `component_change_category`, `example_collocation`, and `example_collocation_2`.
+        If the <other_category_collocations> data is empty, return none.
+
+
+
+prompt_general:
+  baseline: >
+    {role}You are given two sentences for comparison: an 'original sentence' ('{sentence}') and an 'alternative sentence' ('{edited_sentence}'). The alternative sentence might represent a simplification, a stylistic change, an improvement in conciseness, a correction, or other variations when compared to the original.
+
+    Your task is to explain the key differences between these two sentences{output_len}.
+
+      The first sentence (Original): '{sentence}'
+      The second sentence (Alternative): '{edited_sentence}'
+      Formatted comparison highlighting changes: {formatted_sentences}
+          (Guidelines for Markers: Each word/phrase from the original sentence that has been changed is enclosed between "[-" and "-]". Each corresponding word/phrase in the alternative sentence is enclosed between "{{+" and "+}}".)
+
+    First, provide a comprehensive explanation of why the sentences differ.
+
+    Next, provide one illustrative example sentence for the specific word or phrase found within "[-" and "-]" (from the original sentence) and one for the word or phrase within "{{+" and "+}}" (from the alternative sentence). These examples should showcase general usage of these individual words or phrases.
+
+    Finally, repeat the entire response (the comprehensive explanation and the illustrative word/phrase examples) in zh-tw (Traditional Chinese - Taiwan).
+
+  ragDictionary: >
+    {role}You are given two sentences for comparison: an 'original sentence' ('{sentence}') and an 'alternative sentence' ('{edited_sentence}'). The alternative sentence might represent a simplification, a stylistic change, an improvement in conciseness, a correction, or other variations when compared to the original.
+
+    Your task is to explain the key differences between these two sentences{output_len}.
+
+      The first sentence (Original): '{sentence}'
+      The second sentence (Alternative): '{edited_sentence}'
+      Formatted comparison highlighting changes: {formatted_sentences}
+          (Guidelines for Markers: Each word/phrase from the original sentence that has been changed is enclosed between "[-" and "-]". Each corresponding word/phrase in the alternative sentence is enclosed between "{{+" and "+}}".)
+
+    First, provide a comprehensive explanation of why the sentences differ. In your explanation, ensure that you address the following relevant aspects, as applicable:
+
+
+    <usage>
+
+    Definitions and example sentences
+
+    Appropriate usage contexts
+
+    Collocations (include free combinations, restricted collocations, figurative idioms, and pure idioms.)
+
+    Co-occurrence (the phenomenon in language where words frequently appear together, often in close proximity to a central word (a "NODE" word) and shown through corpus analysis measuring their co-occurrence patterns.)
+
+    Differences between British and American English
+
+    Differences between spoken and written English
+
+    Formality level
+
+    Figurative vs. literal usage
+
+    Differences in style, tone, register, clarity, or conciseness
+
+    </usage>
+
+
+    <Dictionary and Academic Keyword List (AKL) information for both words format>
+
+    1. Dictionary definition
+
+    2. Part of speech
+
+    3. CEFR level
+
+    4. Dictionary example sentence
+
+    5. Whether the word is in the AKL
+
+    </Dictionary and Academic Keyword List (AKL) information for both words format>
+
+
+    <information_learner>
+
+    {lemmaWord_learner}:
+
+    1. {learnerWord_pos}
+
+    2. {learnerWord_level}
+
+    3. {learnerWord_definition}
+
+    4. {learnerWord_examples}
+
+    5. {learnerWord_in_akl}
+
+    </information_learner>
+
+
+    <information_recommendation>
+
+    {lemmaWord_editor}:
+
+    1. {editorWord_pos}
+
+    2. {editorWord_level}
+
+    3. {editorWord_definition}
+
+    4. {editorWord_examples}
+
+    5. {editorWord_in_akl}
+
+    </information_recommendation>
+
+
+    Next, provide one illustrative example sentence for the specific word or phrase found within "[-" and "-]" (from the original sentence) and one for the word or phrase within "{{+" and "+}}" (from the alternative sentence). These examples should showcase general usage of these individual words or phrases.
+
+    Finally, repeat the entire response (the comprehensive explanation and the illustrative word/phrase examples) in zh-tw (Traditional Chinese - Taiwan).
+
+  ragL2: >
+    {role}You are given two sentences for comparison: an 'original sentence' ('{sentence}') and an 'alternative sentence' ('{edited_sentence}'). The alternative sentence might represent a simplification, a stylistic change, an improvement in conciseness, a correction, or other variations when compared to the original.
+
+    Your task is to explain the key differences between these two sentences{output_len}.
+
+      The first sentence (Original): '{sentence}'
+      The second sentence (Alternative): '{edited_sentence}'
+      Formatted comparison highlighting changes: {formatted_sentences}
+          (Guidelines for Markers: Each word/phrase from the original sentence that has been changed is enclosed between "[-" and "-]". Each corresponding word/phrase in the alternative sentence is enclosed between "{{+" and "+}}".)
+
+    First, provide a comprehensive explanation of why the sentences differ. In your explanation, ensure that you address the following relevant aspects, as applicable:
+
+
+    <usage>
+
+    Definitions and example sentences
+
+    Appropriate usage contexts
+
+    Collocations (include free combinations, restricted collocations, figurative idioms, and pure idioms.)
+
+    Co-occurrence (the phenomenon in language where words frequently appear together, often in close proximity to a central word (a "NODE" word) and shown through corpus analysis measuring their co-occurrence patterns.)
+
+    Differences between British and American English
+
+    Differences between spoken and written English
+
+    Formality level
+
+    Figurative vs. literal usage
+
+    Differences in style, tone, register, clarity, or conciseness
+
+    </usage>
+
+
+    <causes of lexical errors in EFL learners' writing>
+
+    {causes_of_lexical_errors}
+
+    </causes of lexical errors in EFL learners' writing>
+
+
+    <features of academic writing>
+
+    {features_of_academic_writing}
+
+    </features of academic writing>
+
+
+    Next, provide one illustrative example sentence for the specific word or phrase found within "[-" and "-]" (from the original sentence) and one for the word or phrase within "{{+" and "+}}" (from the alternative sentence). These examples should showcase general usage of these individual words or phrases.
+
+    Finally, repeat the entire response (the comprehensive explanation and the illustrative word/phrase examples) in zh-tw (Traditional Chinese - Taiwan).
+
+  ragCollocation: >
+    {role}You are given two sentences for comparison: an 'original sentence' ('{sentence}') and an 'alternative sentence' ('{edited_sentence}'). The alternative sentence might represent a simplification, a stylistic change, an improvement in conciseness, a correction, or other variations when compared to the original.
+
+    Your task is to explain the key differences between these two sentences{output_len}.
+
+      The first sentence (Original): '{sentence}'
+      The second sentence (Alternative): '{edited_sentence}'
+      Formatted comparison highlighting changes: {formatted_sentences}
+          (Guidelines for Markers: Each word/phrase from the original sentence that has been changed is enclosed between "[-" and "-]". Each corresponding word/phrase in the alternative sentence is enclosed between "{{+" and "+}}".)
+
+    First, provide a comprehensive explanation of why the sentences differ. In your explanation, ensure that you address the following relevant aspects, as applicable:
+
+
+    <usage>
+
+    Definitions and example sentences
+
+    Appropriate usage contexts
+
+    Collocations (include free combinations, restricted collocations, figurative idioms, and pure idioms.)
+
+    Co-occurrence (the phenomenon in language where words frequently appear together, often in close proximity to a central word (a "NODE" word) and shown through corpus analysis measuring their co-occurrence patterns.)
+
+    Differences between British and American English
+
+    Differences between spoken and written English
+
+    Formality level
+
+    Figurative vs. literal usage
+
+    Differences in style, tone, register, clarity, or conciseness
+
+    </usage>
+
+
+    <Related Collocations Filed Names>
+
+    error_component|error_component_pos|error_collocation|correct_collocation|collocation_correction_freq|component_change_freq_details|collocation_pivot_and_category_details|component_change_pivot_category_accum_freq_details|component_change_pivot_category_uniq_freq_details|error_component_total_freq_details|error_component_total_freq_in_pivot_category_details
+
+    </Related Collocations Filed Names>
+
+
+    <related_collocation>
+
+    {related_collocations}
+
+    </related_collocation>
+
+
+    Next, provide one illustrative example sentence for the specific word or phrase found within "[-" and "-]" (from the original sentence) and one for the word or phrase within "{{+" and "+}}" (from the alternative sentence). These examples should showcase general usage of these individual words or phrases.
+
+    Finally, repeat the entire response (the comprehensive explanation and the illustrative word/phrase examples) in zh-tw (Traditional Chinese - Taiwan).
+
+  ragCollocation_v2: >
+    {role}You are given two sentences for comparison: an 'original sentence' ('{sentence}') and an 'alternative sentence' ('{edited_sentence}'). The alternative sentence might represent a simplification, a stylistic change, an improvement in conciseness, a correction, or other variations when compared to the original.
+
+    Your task is to explain the key differences between these two sentences{output_len}.
+
+      The first sentence (Original): '{sentence}'
+      The second sentence (Alternative): '{edited_sentence}'
+      Formatted comparison highlighting changes: {formatted_sentences}
+          (Guidelines for Markers: Each word/phrase from the original sentence that has been changed is enclosed between "[-" and "-]". Each corresponding word/phrase in the alternative sentence is enclosed between "{{+" and "+}}".)
+
+    First, provide a comprehensive explanation of why the sentences differ. In your explanation, ensure that you address the following relevant aspects, as applicable:
+
+
+    <usage>
+
+    Definitions and example sentences
+
+    Appropriate usage contexts
+
+    Collocations (include free combinations, restricted collocations, figurative idioms, and pure idioms.)
+
+    Co-occurrence (the phenomenon in language where words frequently appear together, often in close proximity to a central word (a "NODE" word) and shown through corpus analysis measuring their co-occurrence patterns.)
+
+    Differences between British and American English
+
+    Differences between spoken and written English
+
+    Formality level
+
+    Figurative vs. literal usage
+
+    Differences in style, tone, register, clarity, or conciseness
+
+    </usage>
+
+
+    <Related Collocations Field Names>
+
+    error_component|error_component_pos|error_collocation|correct_collocation|collocation_correction_freq|component_change_freq_details|collocation_pivot_and_category_details|component_change_pivot_category_accum_freq_details|component_change_pivot_category_uniq_freq_details|error_component_total_freq_details|error_component_total_freq_in_pivot_category_details
+
+    </Related Collocations Field Names>
+
+
+    <related_collocation>
+
+    {related_collocations}
+
+    </related_collocation>
+
+
+    <other_category_collocations>
+
+    {other_category_collocations}
+
+    </other_category_collocations>
+
+
+    Next, provide one illustrative example sentence for the specific word or phrase found within "[-" and "-]" (from the original sentence) and one for the word or phrase within "{{+" and "+}}" (from the alternative sentence). These examples should showcase general usage of these individual words or phrases.
+
+    Then repeat the entire response (the comprehensive explanation and the illustrative word/phrase examples) in zh-tw (Traditional Chinese - Taiwan).
+
+    After the explanations and examples, please present the following collocation information:
+
+    1.  **Most Relevant Related Collocation:**
+        From the <related_collocations> data provided above, identify the single entry that is most directly relevant to the recommendation.
+        Present this most relevant collocation formatted as follows:
+        * `component_change_category`: "[error_component] -> [correct_component] (POS) + [category]", where category can be found in "collocation_pivot_and_category_details" (pivot_word < category_name) and POS can be found in "error_component_pos".
+        * `example_collocation`: "[error_component] -> [correct_component] [pivot_word]"
+        * `example_collocation_2`: From the <related_collocations> data, if available, find another distinct collocation where the `error_component` is the same as in the primary correction, but the `pivot_word` is different. Format it as "[error_component] -> [correct_component_for_that_pivot] + [different_pivot_word]". If no such distinct alternative pivot is found for this specific error component in the provided related collocations, create one example on your own.
+        If the <related_collocations> data is empty, return none.
+
+    2.  **Other Category Collocations:**
+        From the <other_category_collocations> data provided above (which represents corrections where the `error_component` is the same but the `pivot_word` and `correct_component` might be different and belong to other semantic categories), select three entries and add another example collocation named `example_collocation_2`.
+        Then return the three entries with `component_change_category`, `example_collocation`, and `example_collocation_2`.
+        If the <other_category_collocations> data is empty, return none.
+
+
+
+  ragMix: >
+    {role}You are given two sentences for comparison: an 'original sentence' ('{sentence}') and an 'alternative sentence' ('{edited_sentence}'). The alternative sentence might represent a simplification, a stylistic change, an improvement in conciseness, a correction, or other variations when compared to the original.
+
+    Your task is to explain the key differences between these two sentences{output_len}.
+
+      The first sentence (Original): '{sentence}'
+      The second sentence (Alternative): '{edited_sentence}'
+      Formatted comparison highlighting changes: {formatted_sentences}
+          (Guidelines for Markers: Each word/phrase from the original sentence that has been changed is enclosed between "[-" and "-]". Each corresponding word/phrase in the alternative sentence is enclosed between "{{+" and "+}}".)
+
+    First, provide a comprehensive explanation of why the sentences differ. In your explanation, ensure that you address the following relevant aspects, as applicable:
+
+
+    <usage>
+
+    Definitions and example sentences
+
+    Appropriate usage contexts
+
+    Collocations (include free combinations, restricted collocations, figurative idioms, and pure idioms.)
+
+    Co-occurrence (the phenomenon in language where words frequently appear together, often in close proximity to a central word (a "NODE" word) and shown through corpus analysis measuring their co-occurrence patterns.)
+
+    Differences between British and American English
+
+    Differences between spoken and written English
+
+    Formality level
+
+    Figurative vs. literal usage
+
+    Differences in style, tone, register, clarity, or conciseness
+
+    </usage>
+
+
+    <Dictionary and Academic Keyword List (AKL) information for both words format>
+
+    1. Dictionary definition
+
+    2. Part of speech
+
+    3. CEFR level
+
+    4. Dictionary example sentence
+
+    5. Whether the word is in the AKL
+
+    </Dictionary and Academic Keyword List (AKL) information for both words format>
+
+
+    <information_learner>
+
+    {lemmaWord_learner}:
+
+    1. {learnerWord_pos}
+
+    2. {learnerWord_level}
+
+    3. {learnerWord_definition}
+
+    4. {learnerWord_examples}
+
+    5. {learnerWord_in_akl}
+
+    </information_learner>
+
+
+    <information_recommendation>
+
+    {lemmaWord_editor}:
+
+    1. {editorWord_pos}
+
+    2. {editorWord_level}
+
+    3. {editorWord_definition}
+
+    4. {editorWord_examples}
+
+    5. {editorWord_in_akl}
+
+    </information_recommendation>
+
+
+    <causes of lexical errors in EFL learners' writing>
+
+    {causes_of_lexical_errors}
+
+    </causes of lexical errors in EFL learners' writing>
+
+
+    <features of academic writing>
+
+    {features_of_academic_writing}
+
+    </features of academic writing>
+
+
+    <Related Collocations Filed Names>
+
+    error_component|error_component_pos|error_collocation|correct_collocation|collocation_correction_freq|component_change_freq_details|collocation_pivot_and_category_details|component_change_pivot_category_accum_freq_details|component_change_pivot_category_uniq_freq_details|error_component_total_freq_details|error_component_total_freq_in_pivot_category_details
+
+    </Related Collocations Filed Names>
+
+
+    <related_collocation>
+
+    {related_collocations}
+
+    </related_collocation>
+
+
+    Next, provide one illustrative example sentence for the specific word or phrase found within "[-" and "-]" (from the original sentence) and one for the word or phrase within "{{+" and "+}}" (from the alternative sentence). These examples should showcase general usage of these individual words or phrases.
+
+    Finally, repeat the entire response (the comprehensive explanation and the illustrative word/phrase examples) in zh-tw (Traditional Chinese - Taiwan).
+
+  ragMix_v2: >
+    {role}You are given two sentences for comparison: an 'original sentence' ('{sentence}') and an 'alternative sentence' ('{edited_sentence}'). The alternative sentence might represent a simplification, a stylistic change, an improvement in conciseness, a correction, or other variations when compared to the original.
+
+    Your task is to explain the key differences between these two sentences{output_len}.
+
+      The first sentence (Original): '{sentence}'
+      The second sentence (Alternative): '{edited_sentence}'
+      Formatted comparison highlighting changes: {formatted_sentences}
+          (Guidelines for Markers: Each word/phrase from the original sentence that has been changed is enclosed between "[-" and "-]". Each corresponding word/phrase in the alternative sentence is enclosed between "{{+" and "+}}".)
+
+    First, provide a comprehensive explanation of why the sentences differ. In your explanation, ensure that you address the following relevant aspects, as applicable:
+
+
+    <usage>
+
+    Definitions and example sentences
+
+    Appropriate usage contexts
+
+    Collocations (include free combinations, restricted collocations, figurative idioms, and pure idioms.)
+
+    Co-occurrence (the phenomenon in language where words frequently appear together, often in close proximity to a central word (a "NODE" word) and shown through corpus analysis measuring their co-occurrence patterns.)
+
+    Differences between British and American English
+
+    Differences between spoken and written English
+
+    Formality level
+
+    Figurative vs. literal usage
+
+    Differences in style, tone, register, clarity, or conciseness
+
+    </usage>
+
+
+    <Dictionary and Academic Keyword List (AKL) information for both words format>
+
+    1. Dictionary definition
+
+    2. Part of speech
+
+    3. CEFR level
+
+    4. Dictionary example sentence
+
+    5. Whether the word is in the AKL
+
+    </Dictionary and Academic Keyword List (AKL) information for both words format>
+
+
+    <information_learner>
+
+    {lemmaWord_learner}:
+
+    1. {learnerWord_pos}
+
+    2. {learnerWord_level}
+
+    3. {learnerWord_definition}
+
+    4. {learnerWord_examples}
+
+    5. {learnerWord_in_akl}
+
+    </information_learner>
+
+
+    <information_recommendation>
+
+    {lemmaWord_editor}:
+
+    1. {editorWord_pos}
+
+    2. {editorWord_level}
+
+    3. {editorWord_definition}
+
+    4. {editorWord_examples}
+
+    5. {editorWord_in_akl}
+
+    </information_recommendation>
+
+
+    <causes of lexical errors in EFL learners' writing>
+
+    {causes_of_lexical_errors}
+
+    </causes of lexical errors in EFL learners' writing>
+
+
+    <features of academic writing>
+
+    {features_of_academic_writing}
+
+    </features of academic writing>
+
+
+    <Related Collocations Filed Names>
+
+    error_component|error_component_pos|error_collocation|correct_collocation|collocation_correction_freq|component_change_freq_details|collocation_pivot_and_category_details|component_change_pivot_category_accum_freq_details|component_change_pivot_category_uniq_freq_details|error_component_total_freq_details|error_component_total_freq_in_pivot_category_details
+
+    </Related Collocations Filed Names>
+
+
+    <related_collocation>
+
+    {related_collocations}
+
+    </related_collocation>
+
+
+    Next, provide one illustrative example sentence for the specific word or phrase found within "[-" and "-]" (from the original sentence) and one for the word or phrase within "{{+" and "+}}" (from the alternative sentence). These examples should showcase general usage of these individual words or phrases.
+
+    Then repeat the entire response (the comprehensive explanation and the illustrative word/phrase examples) in zh-tw (Traditional Chinese - Taiwan).
+
+    After the explanations and examples, please present the following collocation information:
+
+    1.  **Most Relevant Related Collocation:**
+        From the <related_collocations> data provided above, identify the single entry that is most directly relevant to the recommendation.
+        Present this most relevant collocation formatted as follows:
+        * `component_change_category`: "[error_component] -> [correct_component] (POS) + [category]", where category can be found in "collocation_pivot_and_category_details" (pivot_word < category_name) and POS can be found in "error_component_pos".
+        * `example_collocation`: "[error_component] -> [correct_component] [pivot_word]"
+        * `example_collocation_2`: From the <related_collocations> data, if available, find another distinct collocation where the `error_component` is the same as in the primary correction, but the `pivot_word` is different. Format it as "[error_component] -> [correct_component_for_that_pivot] + [different_pivot_word]". If no such distinct alternative pivot is found for this specific error component in the provided related collocations, create one example on your own.
+        If the <related_collocations> data is empty, return none.
+
+    2.  **Other Category Collocations:**
+        From the <other_category_collocations> data provided above (which represents corrections where the `error_component` is the same but the `pivot_word` and `correct_component` might be different and belong to other semantic categories), select three entries and add another example collocation named `example_collocation_2`.
+        Then return the three entries with `component_change_category`, `example_collocation`, and `example_collocation_2`.
+        If the <other_category_collocations> data is empty, return none.
+
+
+
+output_schema:
+  explanation_and_examples:
+    type: object
+    properties:
+      explanation_en:
+        type: string
+        description: The comprehensive explanation of the grammar correction in English. Strictly follow the word limit.
+      explanation_zh_tw:
+        type: string
+        description: The Traditional Chinese (Taiwan) translation of the English explanation.
+      example_en:
+        type: array
+        items:
+          type: string
+        description: A list of exactly two English example sentences the first for the original learner's word, the second for the editor's recommended word, showcasing their general usage.
+      example_zh_tw:
+        type: array
+        items:
+          type: string
+        description: The Traditional Chinese (Taiwan) translation of the two sentences in 'example_en'.
+    required:
+      - explanation_en
+      - explanation_zh_tw
+      - example_en
+      - example_zh_tw
+    additionalProperties: false
+
+  l2_knowledge:
+    type: object
+    properties:
+      matched:
+        type: array
+        title: "Matched"
+        items:
+          type: string
+    required:
+      - matched
+    additionalProperties: false
+
+  collocation:
+    type: object
+    properties:
+      explanation_en:
+        type: string
+        description: The comprehensive explanation of the grammar correction in English. Strictly follow the word limit.
+      explanation_zh_tw:
+        type: string
+        description: The Traditional Chinese (Taiwan) translation of the English explanation.
+      example_en:
+        type: array
+        items:
+          type: string
+        description: A list of exactly two English example sentences the first for the original learner's word, the second for the editor's recommended word, showcasing their general usage.
+      example_zh_tw:
+        type: array
+        items:
+          type: string
+        description: The Traditional Chinese (Taiwan) translation of the two sentences in 'example_en'.
+      corresponding_collocation_en:
+        type: array
+        items:
+          type: string
+        description: "A list containing exactly one string. This string represents the error leading to the corrected collocation, with the part-of-speech (POS) of the corrected component. Format: '[error_component] -> [correct_component] ([POS]) + [category]', where [POS] is the error_component_pos. Example: 'accomplish -> achieve (VERB) + Goal'. Should be an empty list if source data is empty or no relevant entry is found."
+      corresponding_collocation_examples_en:
+        type: array
+        items:
+          type: string
+        description: "A list of exactly two strings for the most relevant related collocation, representing alternative pivot usage or a self-created example if needed. Each string must be formatted as '[error_component] -> [correct_component] [pivot_phrase_or_concept]'. Example: ['accomplish -> achieve success', 'accomplish -> attain victory']. Should be an empty list if source data is empty or no relevant entry is found."
+      other_collocations_en:
+        type: array
+        items:
+          type: string
+        description: "A list of 'component_change_category'-like strings (up to three) selected from the 'other_category_collocations' data. Each string formatted as '[error_component] -> [correct_component] ([POS]) + [Pivot_Category_Name]', where [POS] is the error_component_pos from the source entry. Example: ['accomplish -> make (VERB) + Decision', 'accomplish -> bring (VERB) + Change', ...]. Should be an empty list if source data is empty."
+      other_collocations_examples_en:
+        type: array
+        items:
+          type: string
+        description: "A list of strings (up to three). Each string represents a corrected alternative collocation from the 'other_category_collocations' data, formatted similarly to strings in `corresponding_collocation_examples_en`: `'[error_component] -> [correct_component] [pivot_phrase_or_concept]'`. The [pivot_phrase_or_concept] should be derived from the [Pivot_Category_Name] of the source entry. Example: ['accomplish -> make decision', 'accomplish -> bring change', 'accomplish -> carry out plan']. Should be an empty list if source data is empty."
+    required:
+      - explanation_en
+      - explanation_zh_tw
+      - example_en
+      - example_zh_tw
+      - corresponding_collocation_en
+      - corresponding_collocation_examples_en
+      - other_collocations_en
+      - other_collocations_examples_en
+    additionalProperties: false
+
+l2_knowledge:
+  causes: >
+    Linguistic factors include:
+      - L1 influence (interlingual transfer): Learners often rely on direct translation or mimic structures from their native language, leading to errors such as literal translations, false cognates, or incorrect collocational patterns. For example, translating Vietnamese or Arabic phrases directly into English without considering the target language conventions results in unnatural combinations.
+      - Structural differences: Variations in syntax, word formation, and grammatical restrictions across languages can cause errors. For instance, differences in prepositional usage or the syntactic position of collocates may lead to incorrect combinations.
+      - Semantic restrictions: Certain words have limited or specific collocational contexts, and ignorance of these restrictions causes inappropriate pairings. For example, using “make a decision” instead of “take a decision” reflects a lack of awareness of collocational restrictions.
+      - Polysemy and near synonyms: Confusion between words with similar meanings or multiple senses can lead to inappropriate choices, such as substituting “lose” for “drop” or “attend” for “participate,” often influenced by similar forms or overlapping meanings.
+
+    Cognitive factors include:
+      - Limited lexical knowledge: Learners may lack sufficient vocabulary or collocational knowledge, leading to overgeneralization, avoidance, or reliance on high-frequency or familiar words.
+      - Hypothesis testing and overgeneralization: Learners often hypothesize about correct collocations, applying rules too broadly or substituting familiar patterns, which results in errors.
+      - Processing constraints: Difficulty in retrieving and selecting appropriate collocations under cognitive load, especially when processing complex or less frequent phrases, contributes to errors.
+      - Fossilization: Repeated incorrect usage of certain collocations becomes entrenched over time, making correction difficult even with increased exposure.
+
+    Contextual factors encompass:
+      - Cultural and discourse context: Learners’ understanding of cultural connotations and discourse norms influences their collocation choices. For example, idioms or culturally specific collocations may be misused if learners lack cultural awareness.
+      - Exposure and input frequency: Insufficient exposure to authentic language input or limited practice with collocations reduces familiarity and impairs correct usage.
+      - Situational and register influences: Learners may choose inappropriate collocations based on the formality or context of their speech or writing, such as using informal collocations in formal writing.
+      - Learning environment and instructional methods: Emphasis on grammar over lexical patterns, lack of explicit collocation instruction, or inadequate feedback on collocational errors hinder the development of proper collocational competence.
+
+  academic_writing: >
+    Formality and Objectivity:
+      - Academic writing maintains a formal tone, avoiding colloquial language, slang, and personal expressions.
+      - It employs impersonal voice, often avoiding personal pronouns like "I" or "we," especially in sciences, to enhance neutrality and objectivity.
+      - The style is cautious and tentative, using hedging devices and modal verbs to prevent overly definitive statements and reflect uncertainty or room for interpretation.
+
+    Lexical and Stylistic Features:
+      - Use of specialist vocabulary, technical jargon, Latin expressions, and collocations to demonstrate expertise and precision.
+      - Preference for single, precise verbs over phrasal or prepositional verbs common in spoken language.
+      - High lexical density with content words packed into sentences to convey complex ideas efficiently.
+      - Short, direct sentences with simple grammatical structures are favored for clarity, especially in technical or scientific texts.
+
+    Structural and Textual Organization:
+      - Clear, logical organization with well-defined parts such as titles, abstracts, introductions, methods, results, discussions, conclusions, references, and appendices.
+      - Paragraphs are structured around a single main idea, often indicated by topic sentences, with appropriate indentation and spacing.
+      - Use of signposting devices such as metadiscourse (e.g., "however," "therefore," "firstly") to guide readers and clarify relationships between ideas.
+      - Texts often follow a predictable pattern (e.g., IMRD: Introduction, Methods, Results, Discussion) to facilitate reader understanding.
+
+    Citations and Referencing:
+      - Proper acknowledgment of sources through referencing and citation, which supports credibility and allows verification.
+      - Use of recent and relevant citations to demonstrate engagement with current scholarship.
+      - Quotations can be direct (enclosed in quotation marks) or indirect, integrated into the text.
+
+    Flow and Cohesion:
+      - Logical progression from known (old) to new information, ensuring coherence within and between paragraphs.
+      - Linking words and phrases (e.g., "however," "moreover," "thus") create smooth connections between ideas.
+      - Repetition and repetition of key terms help reinforce ideas and maintain focus.
+
+    Clarity and Precision:
+      - Emphasis on clarity of purpose, with concise and explicit expression of ideas.
+      - Use of objective and neutral language to present findings and arguments without bias.
+      - Avoidance of ambiguity by precise terminology and clear explanations
+
+    Conventions and Style Standards:
+      - Adherence to discipline-specific style guides and formatting rules for headings, citations, references, and layout.
+      - Proper use of punctuation, capitalization, and spelling to prevent misinterpretation.
+      - Paragraph division is logical, with clear separation to signal shifts in ideas or focus.
+
+    Cultural and Disciplinary Variations:
+      - Recognition that disciplinary differences influence stylistic conventions; for example, humanities may permit more personal voice, while sciences favor impersonal style.
+      - While academic English tends to be explicit, recent research suggests that it is often more compressed and less elaborated than stereotyped, emphasizing efficiency and precision.
+
+    Purpose and Audience Awareness:
+      - The primary goal is to communicate ideas, procedures, and findings effectively to an academic or expert audience.
+      - Writers should consider the readers' expectations and background knowledge, aiming for clarity, credibility, and persuasiveness.
