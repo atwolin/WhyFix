@@ -188,9 +188,9 @@ python -m process.retrieval.retrieve_3_collocation gpt true longman 768
 ```yaml
 model_settings:
   embedding_model: "text-embedding-3-large"
-  llm_model: "gpt-4-turbo"
+  llm_model: "gpt-4.1-nano"
   temperature: 0.0
-  max_tokens: 2048
+  max_tokens: 40000
 
 retrieval_settings:
   top_k: 5
