@@ -109,7 +109,7 @@ WhyFix/
 #### RAG-based Retrieval
 
 ```bash
-python -m process.retrieval.retrieve_3_collocation gpt true longman 768
+python -m process.retrieval.retrieve_3_collocation gpt true A small
 ```
 
 #### Batch Processing
